@@ -5,6 +5,10 @@
     <Group>group1</Group>
     <Group>group2</Group>
     <Group>group3</Group>
+    <Group>group4</Group>
+    <Group>group5</Group>
+    <Group>group6</Group>
+    <Group>group7</Group>
   </Groups>
   <Fields>
     <!-- POLA EDYTOWALNE -->
@@ -29,47 +33,54 @@
 
     <!-- POLA WYLICZANE (READ-ONLY) -->
     <Field>
-      <Name>FirstName</Name>
-      <Label>First Name (AD)</Label>
-      <Template>c{InputFirstname} {InputSurname}c</Template>
-      <Editable>false</Editable>
+        <Name>FirstName</Name>
+        <Label>First Name (AD)</Label>
+        <Template>c{InputFirstname} {InputSurname}c</Template>
+        <Editable>false</Editable>
+        <ADAttribute>givenName</ADAttribute>
     </Field>
     <Field>
-      <Name>LastName</Name>
-      <Label>Last Name (AD)</Label>
-      <Template></Template>
-      <Editable>false</Editable>
+        <Name>LastName</Name>
+        <Label>Last Name (AD)</Label>
+        <Template></Template>
+        <Editable>false</Editable>
+        <ADAttribute>sn</ADAttribute>
     </Field>
     <Field>
-      <Name>DisplayName</Name>
-      <Label>Display Name</Label>
-      <Template>c{InputFirstname} {InputSurname}c</Template>
-      <Editable>false</Editable>
+        <Name>DisplayName</Name>
+        <Label>Display Name</Label>
+        <Template>c{InputFirstname} {InputSurname}c</Template>
+        <Editable>false</Editable>
+        <ADAttribute>displayName</ADAttribute>
     </Field>
     <Field>
-      <Name>FullName</Name>
-      <Label>Full Name</Label>
-      <Template>c{InputFirstname} {InputSurname}c</Template>
-      <Editable>false</Editable>
+        <Name>FullName</Name>
+        <Label>Full Name</Label>
+        <Template>c{InputFirstname} {InputSurname}c</Template>
+        <Editable>false</Editable>
+        <ADAttribute>name</ADAttribute>
     </Field>
     <Field>
-      <Name>UserLogonName</Name>
-      <Label>User Logon Name</Label>
-      <Template>c{InputFirstname[0]}{InputSurname}c@mojafirma.com</Template>
-      <Editable>false</Editable>
+        <Name>UserLogonName</Name>
+        <Label>User Logon Name</Label>
+        <Template>c{InputFirstname[0]}{InputSurname}c@mojafirma.com</Template>
+        <Editable>false</Editable>
+        <ADAttribute>userPrincipalName</ADAttribute>
     </Field>
     <Field>
-      <Name>UserLogonNamePre2000</Name>
-      <Label>User Logon Name (Pre 2000)</Label>
-      <Template>MOJAFIRMA\c{InputFirstname[0]}{InputSurname}c</Template>
-      <Editable>false</Editable>
+        <Name>UserLogonNamePre2000</Name>
+        <Label>User Logon Name (Pre 2000)</Label>
+        <Template>MOJAFIRMA\c{InputFirstname[0]}{InputSurname}c</Template>
+        <Editable>false</Editable>
+        <ADAttribute>sAMAccountName</ADAttribute>
     </Field>
     <Field>
-      <Name>AzureSynced</Name>
-      <Label>Azure Synced?</Label>
-      <Type>Checkbox</Type>
-      <Value>true</Value>
-      <Editable>false</Editable>
+        <Name>AzureSynced</Name>
+        <Label>Azure Synced?</Label>
+        <Type>Checkbox</Type>
+        <Value>true</Value>
+        <Editable>false</Editable>
+        <ADAttribute>extensionAttribute15</ADAttribute>
     </Field>
   </Fields>
 </Template>

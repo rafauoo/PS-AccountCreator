@@ -90,6 +90,42 @@ function Update-DependentFields {
 
 }
 
+function Add-GroupInfoDisplay {
+    param (
+        [System.Windows.Forms.Panel]$Panel,
+        [xml]$Template,
+        [int]$StartY
+    )
+
+
+    $groupBoxContainer = New-Object System.Windows.Forms.GroupBox
+    $groupBoxContainer.Text = "Automatically Assigned Groups"
+    $groupBoxContainer.Location = New-Object System.Drawing.Point(10, $StartY)
+    $groupBoxContainer.Width = 410
+    $groupBoxContainer.Height = 90
+
+    $groupBox = New-Object System.Windows.Forms.TextBox
+    $groupBox.Multiline = $true
+    $groupBox.ReadOnly = $true
+    $groupBox.ScrollBars = 'Vertical'
+    $groupBox.Width = 390
+    $groupBox.Height = 60
+    $groupBox.Location = New-Object System.Drawing.Point(10, 20)
+    $groupBox.BackColor = [System.Drawing.SystemColors]::Control
+    $groupBox.BorderStyle = 'FixedSingle'
+
+    $groupText = ""
+    foreach ($group in $Template.Template.Groups.Group) {
+        $groupText += "$group`r`n"
+    }
+    $groupBox.Text = $groupText.Trim()
+
+    $groupBoxContainer.Controls.Add($groupBox)
+    $Panel.Controls.Add($groupBoxContainer)
+
+    return ($StartY + $groupBox.Height + 20)
+}
+
 
 
 
@@ -101,7 +137,7 @@ function Build-Form {
 
     $Panel.Controls.Clear()
     $global:fieldInputs.Clear()
-    $y = 10
+    $y = 20
 
     foreach ($field in $Template.Template.Fields.Field) {
         $label = New-Object System.Windows.Forms.Label
@@ -133,6 +169,8 @@ function Build-Form {
         $y += 30
     }
 
+    $y = Add-GroupInfoDisplay -Panel $Panel -Template $Template -StartY $y
+    Write-Host "Pola formularza zbudowane, aktualna pozycja Y: $y"
     # Podpinanie dynamicznych zdarzeń dla wszystkich pól typu LocalVar
     foreach ($field in $Template.Template.Fields.Field) {
         if ($field.LocalVar -eq "true" -and $global:fieldInputs.ContainsKey($field.Name)) {
@@ -147,7 +185,8 @@ function Build-Form {
     $submitButton.Text = "Utwórz konto"
     $submitButton.Location = New-Object System.Drawing.Point(150, ($y + 20))
     $submitButton.Add_Click({
-            Handle-CreateAccount $Template
+            Update-DependentFields $global:currentTemplate
+            Show-SummaryForm $global:currentTemplate
         })
     $Panel.Controls.Add($submitButton)
 }

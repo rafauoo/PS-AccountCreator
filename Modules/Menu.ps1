@@ -3,19 +3,19 @@ Add-Type -AssemblyName System.Drawing
 
 function Show-GUI {
     $form = New-Object System.Windows.Forms.Form
-    $form.Text = "Tworzenie konta AD"
-    $form.Size = New-Object System.Drawing.Size(500, 500)
+    $form.Text = "PS-AccountCreator by Rafal Budnik"
+    $form.Size = New-Object System.Drawing.Size(500, 600)
 
     $templateFolder = "$PSScriptRoot\..\Templates"
     $templateDropdown = New-Object System.Windows.Forms.ComboBox
-    $templateDropdown.Location = New-Object System.Drawing.Point(10, 10)
-    $templateDropdown.Size = New-Object System.Drawing.Size(460, 20)
+    $templateDropdown.Location = New-Object System.Drawing.Point(30, 10)
+    $templateDropdown.Size = New-Object System.Drawing.Size(400, 20)
     $templateDropdown.DropDownStyle = 'DropDownList'
     $form.Controls.Add($templateDropdown)
 
     $panel = New-Object System.Windows.Forms.Panel
     $panel.Location = New-Object System.Drawing.Point(10, 50)
-    $panel.Size = New-Object System.Drawing.Size(460, 380)
+    $panel.Size = New-Object System.Drawing.Size(460, 480)
     $form.Controls.Add($panel)
 
     $templateFiles = Get-ChildItem -Path $templateFolder -Filter *.xml
