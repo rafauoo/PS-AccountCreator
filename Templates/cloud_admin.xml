@@ -1,0 +1,75 @@
+<Template>
+  <AccountType>Cloud Admin</AccountType>
+  <BaseOU>OU=Cloud Admin,DC=mojafirma,DC=com</BaseOU>
+  <Groups>
+    <Group>group1</Group>
+    <Group>group2</Group>
+    <Group>group3</Group>
+  </Groups>
+  <Fields>
+    <!-- POLA EDYTOWALNE -->
+    <Field>
+      <Name>InputFirstname</Name>
+      <Label>Firstname (input)</Label>
+      <Editable>true</Editable>
+      <LocalVar>true</LocalVar>
+    </Field>
+    <Field>
+      <Name>InputSurname</Name>
+      <Label>Surname (input)</Label>
+      <Editable>true</Editable>
+      <LocalVar>true</LocalVar>
+    </Field>
+    <Field>
+      <Name>CloudAttribute</Name>
+      <Label>Cloud Attribute</Label>
+      <Value>A-AA-B</Value>
+      <Editable>true</Editable>
+    </Field>
+
+    <!-- POLA WYLICZANE (READ-ONLY) -->
+    <Field>
+      <Name>FirstName</Name>
+      <Label>First Name (AD)</Label>
+      <Template>c{InputFirstname} {InputSurname}c</Template>
+      <Editable>false</Editable>
+    </Field>
+    <Field>
+      <Name>LastName</Name>
+      <Label>Last Name (AD)</Label>
+      <Template></Template>
+      <Editable>false</Editable>
+    </Field>
+    <Field>
+      <Name>DisplayName</Name>
+      <Label>Display Name</Label>
+      <Template>c{InputFirstname} {InputSurname}c</Template>
+      <Editable>false</Editable>
+    </Field>
+    <Field>
+      <Name>FullName</Name>
+      <Label>Full Name</Label>
+      <Template>c{InputFirstname} {InputSurname}c</Template>
+      <Editable>false</Editable>
+    </Field>
+    <Field>
+      <Name>UserLogonName</Name>
+      <Label>User Logon Name</Label>
+      <Template>c{InputFirstname[0]}{InputSurname}c@mojafirma.com</Template>
+      <Editable>false</Editable>
+    </Field>
+    <Field>
+      <Name>UserLogonNamePre2000</Name>
+      <Label>User Logon Name (Pre 2000)</Label>
+      <Template>MOJAFIRMA\c{InputFirstname[0]}{InputSurname}c</Template>
+      <Editable>false</Editable>
+    </Field>
+    <Field>
+      <Name>AzureSynced</Name>
+      <Label>Azure Synced?</Label>
+      <Type>Checkbox</Type>
+      <Value>true</Value>
+      <Editable>false</Editable>
+    </Field>
+  </Fields>
+</Template>
