@@ -66,7 +66,7 @@
         <Label>User Logon Name (Pre 2000)</Label>
         <Template>MOJAFIRMA\c{InputFirstname[0]}{InputSurname}c</Template>
         <Editable>false</Editable>
-        <ADAttribute>sAMAccountName</ADAttribute>
+        <ADAttribute>SamAccountName</ADAttribute>
     </Field>
     <Field>
         <Name>AzureSynced</Name>
