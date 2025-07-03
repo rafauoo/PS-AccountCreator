@@ -1,14 +1,10 @@
 <Template>
-  <AccountType>Cloud Admin</AccountType>
-  <BaseOU>OU=Cloud Admin,DC=mojafirma,DC=com</BaseOU>
+  <AccountType>Helpdesk User</AccountType>
+  <BaseOU>OU=Helpdesk Users,DC=mojafirma,DC=com</BaseOU>
   <Groups>
-    <Group>group1</Group>
-    <Group>group2</Group>
-    <Group>group3</Group>
-    <Group>group4</Group>
-    <Group>group5</Group>
-    <Group>group6</Group>
-    <Group>group7</Group>
+    <Group>Helpdesk Team</Group>
+    <Group>IT Support</Group>
+    <Group>Standard Users</Group>
   </Groups>
   <Fields>
     <!-- POLA EDYTOWALNE -->
@@ -25,56 +21,56 @@
       <LocalVar>true</LocalVar>
     </Field>
     <Field>
-      <Name>CloudAttribute</Name>
-      <Label>Cloud Attribute</Label>
-      <Value>A-AA-B</Value>
+      <Name>HelpdeskLevel</Name>
+      <Label>Helpdesk Level</Label>
+      <Value>Level 1</Value>
       <Editable>true</Editable>
-      <ADAttribute>extensionAttribute16</ADAttribute>
+      <ADAttribute>extensionAttribute20</ADAttribute>
     </Field>
 
     <!-- POLA WYLICZANE (READ-ONLY) -->
     <Field>
         <Name>FirstName</Name>
         <Label>First Name (AD)</Label>
-        <Template>c{InputFirstname} {InputSurname}c</Template>
+        <Template>h{InputFirstname} {InputSurname}h</Template>
         <Editable>false</Editable>
         <ADAttribute>givenName</ADAttribute>
     </Field>
     <Field>
         <Name>DisplayName</Name>
         <Label>Display Name</Label>
-        <Template>c{InputFirstname} {InputSurname}c</Template>
+        <Template>h{InputFirstname} {InputSurname}h</Template>
         <Editable>false</Editable>
         <ADAttribute>displayName</ADAttribute>
     </Field>
     <Field>
         <Name>FullName</Name>
         <Label>Full Name</Label>
-        <Template>c{InputFirstname} {InputSurname}c</Template>
+        <Template>h{InputFirstname} {InputSurname}h</Template>
         <Editable>false</Editable>
         <ADAttribute>name</ADAttribute>
     </Field>
     <Field>
         <Name>UserLogonName</Name>
         <Label>User Logon Name</Label>
-        <Template>c{InputFirstname[0]}{InputSurname}c@mojafirma.com</Template>
+        <Template>hc{InputFirstname[0]}{InputSurname}h@mojafirma.com</Template>
         <Editable>false</Editable>
         <ADAttribute>userPrincipalName</ADAttribute>
     </Field>
     <Field>
         <Name>UserLogonNamePre2000</Name>
         <Label>User Logon Name (Pre 2000)</Label>
-        <Template>MOJAFIRMA\c{InputFirstname[0]}{InputSurname}c</Template>
+        <Template>MOJAFIRMA\h{InputFirstname[0]}{InputSurname}h</Template>
         <Editable>false</Editable>
         <ADAttribute>sAMAccountName</ADAttribute>
     </Field>
     <Field>
-        <Name>AzureSynced</Name>
-        <Label>Azure Synced?</Label>
+        <Name>IsActive</Name>
+        <Label>Account Active?</Label>
         <Type>Checkbox</Type>
         <Value>true</Value>
-        <Editable>false</Editable>
-        <ADAttribute>extensionAttribute15</ADAttribute>
+        <Editable>true</Editable>
+        <ADAttribute>userAccountControl</ADAttribute>
     </Field>
   </Fields>
 </Template>

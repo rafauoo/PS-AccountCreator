@@ -1,25 +1,5 @@
 $global:fieldInputs = @{}
 
-function ReplacePlaceholders {
-    param ($template, $inputFirstName, $inputSurname)
-
-    $map = @{
-        "cFirstname" = $inputFirstName
-        "Surnamec"   = $inputSurname
-        "cfsurnamec" = ($inputFirstName.Substring(0, 1) + $inputSurname)
-    }
-
-    foreach ($field in $template.Template.Fields.Field) {
-        if ($field.Template) {
-            $value = $field.Template
-            foreach ($token in $map.Keys) {
-                $value = $value -replace $token, $map[$token]
-            }
-            $field.Value = $value
-        }
-    }
-}
-
 function Evaluate-TemplateString {
     param (
         [string]$template,
@@ -53,11 +33,11 @@ function Update-DependentFields {
     param ([xml]$Template)
 
     $localVars = @{}
-    Write-Host "Aktualizacja pól zależnych..."
+    #Write-Host "Aktualizacja pól zależnych..."
 
     # Zbuduj słownik tylko z aktualnych pól lokalnych
     foreach ($field in $Template.Template.Fields.Field) {
-        Write-Host "Pole: $($field.Name), Typ: $($field.Type), Wartość: $($field.Value)"
+        #Write-Host "Pole: $($field.Name), Typ: $($field.Type), Wartość: $($field.Value)"
         if ($field.LocalVar -eq "true") {
             if ($global:fieldInputs.ContainsKey($field.Name)) {
                 $localVars[$field.Name] = $global:fieldInputs[$field.Name].Text
@@ -69,7 +49,7 @@ function Update-DependentFields {
     foreach ($field in $Template.Template.Fields.Field) {
         if ($field.Template -and ($field.Editable -ne $null -and $field.Editable.ToLower() -ne "true")) {
             $evaluated = Evaluate-TemplateString -template $field.Template -localVars $localVars
-            Write-Host "Aktualizacja pola: $($field.Name), Wartość: $evaluated"
+            #Write-Host "Aktualizacja pola: $($field.Name), Wartość: $evaluated"
 
             if ($field.Value) {
                 $field.Value = $evaluated
@@ -84,7 +64,7 @@ function Update-DependentFields {
                 $global:fieldInputs[$field.Name].Text = $evaluated
             }
 
-            Write-Host "Pole: $($field.Name), Nowa wartość: $evaluated"
+            #Write-Host "Pole: $($field.Name), Nowa wartość: $evaluated"
         }
     }
 
@@ -127,8 +107,6 @@ function Add-GroupInfoDisplay {
 }
 
 
-
-
 function Build-Form {
     param (
         [System.Windows.Forms.Panel]$Panel,
@@ -139,11 +117,17 @@ function Build-Form {
     $global:fieldInputs.Clear()
     $y = 20
 
+    $labelFont = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Regular)
+    $inputFont = New-Object System.Drawing.Font("Segoe UI", 9)
+
     foreach ($field in $Template.Template.Fields.Field) {
         $label = New-Object System.Windows.Forms.Label
         $label.Text = $field.Label
-        $label.Location = New-Object System.Drawing.Point(10, $y)
-        $label.Width = 130
+        $label.Font = $labelFont
+        $label.Location = New-Object System.Drawing.Point(20, $y)
+        $label.Width = 180
+        $label.AutoSize = $false
+        $label.AutoEllipsis = $true
         $Panel.Controls.Add($label)
 
         $input = $null
@@ -151,14 +135,15 @@ function Build-Form {
 
         if ($field.Type -eq "Checkbox") {
             $input = New-Object System.Windows.Forms.CheckBox
-            $input.Location = New-Object System.Drawing.Point(150, $y)
+            $input.Location = New-Object System.Drawing.Point(210, $y)
             $input.Checked = ($field.Value -eq "true")
             $input.Enabled = $isEditable
         }
         else {
             $input = New-Object System.Windows.Forms.TextBox
-            $input.Location = New-Object System.Drawing.Point(150, $y)
+            $input.Location = New-Object System.Drawing.Point(210, $y)
             $input.Width = 250
+            $input.Font = $inputFont
             $input.Text = $field.Value
             $input.ReadOnly = -not $isEditable
         }
@@ -170,8 +155,7 @@ function Build-Form {
     }
 
     $y = Add-GroupInfoDisplay -Panel $Panel -Template $Template -StartY $y
-    Write-Host "Pola formularza zbudowane, aktualna pozycja Y: $y"
-    # Podpinanie dynamicznych zdarzeń dla wszystkich pól typu LocalVar
+
     foreach ($field in $Template.Template.Fields.Field) {
         if ($field.LocalVar -eq "true" -and $global:fieldInputs.ContainsKey($field.Name)) {
             $global:fieldInputs[$field.Name].Add_TextChanged({
@@ -182,13 +166,37 @@ function Build-Form {
     }
 
     $submitButton = New-Object System.Windows.Forms.Button
-    $submitButton.Text = "Utwórz konto"
+    $submitButton.Text = "Create Account"
+    $submitButton.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+    $submitButton.BackColor = [System.Drawing.Color]::LightGreen
     $submitButton.Location = New-Object System.Drawing.Point(150, ($y + 20))
+    $submitButton.Size = New-Object System.Drawing.Size(160, 30)
     $submitButton.Add_Click({
             Update-DependentFields $global:currentTemplate
             Show-SummaryForm $global:currentTemplate
         })
+
     $Panel.Controls.Add($submitButton)
+    $resetButton = New-Object System.Windows.Forms.Button
+    $resetButton.Text = "Reset Form"
+    $resetButton.Font = New-Object System.Drawing.Font("Segoe UI", 9)
+    $resetButton.BackColor = [System.Drawing.Color]::LightGray
+    $resetButton.Location = New-Object System.Drawing.Point(320, ($y + 20))
+    $resetButton.Size = New-Object System.Drawing.Size(110, 30)
+    $resetButton.Add_Click({
+            Reset-FormFields
+        })
+    $Panel.Controls.Add($resetButton)
+
+    # Przewiń widok do dolnych przycisków
+    $Panel.ScrollControlIntoView($resetButton)
+    # Ustaw wysokość lub przewiń do przycisku
+    $Panel.ScrollControlIntoView($submitButton)
+
+    Update-DependentFields $global:currentTemplate
 }
 
 
+function Reset-FormFields {
+    Build-Form -Panel $panel -Template $global:currentTemplate
+}
