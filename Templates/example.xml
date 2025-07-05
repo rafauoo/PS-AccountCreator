@@ -37,23 +37,23 @@
       <Type>Select</Type>
       <Editable>true</Editable>
       <LocalVar>true</LocalVar>
-      <ADAttribute>extensionAttribute12</ADAttribute>
+      <ADAttribute>OU</ADAttribute>
       <Options>
         <Option>
           <Label>Development</Label>
-          <Value>DEV</Value>
+          <Value>OU=Development,OU=Users,DC=mojafirma,DC=com</Value>
         </Option>
         <Option>
           <Label>Customer Service</Label>
-          <Value>CUST</Value>
+          <Value>OU=Customer Service,OU=Users,DC=mojafirma,DC=com</Value>
         </Option>
         <Option>
           <Label>Human Resources</Label>
-          <Value>HR</Value>
+          <Value>OU=HR,OU=Users,DC=mojafirma,DC=com</Value>
         </Option>
         <Option>
           <Label>Sales</Label>
-          <Value>SALES</Value>
+          <Value>OU=Sales,OU=Users,DC=mojafirma,DC=com</Value>
         </Option>
       </Options>
     </Field>

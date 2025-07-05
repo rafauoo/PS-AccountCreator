@@ -4,39 +4,92 @@ function Handle-CreateAccount {
         [string[]]$Groups
     )
 
-    # Przygotuj parametry dla New-ADUser
+    # Wygeneruj hasło
     $generatedPassword = New-HumanFriendlyPassword -Length 24
-    $newUserParams = @{
-        AccountPassword = $generatedPassword  # Tu możesz podstawić właściwe hasło
+
+    # Wyciągnij OU i usuń z hashtable
+    $ou = $AccountData['OU']
+    if (-not $ou -or $ou -eq '') {
+        # Fallback do BaseOU jeśli dostępne
+        if ($AccountData.ContainsKey('BaseOU') -and $AccountData['BaseOU']) {
+            $ou = $AccountData['BaseOU']
+            $AccountData.Remove('BaseOU')
+        }
+        else {
+            Show-ErrorBox -Message "Missing OU and no fallback BaseOU provided."
+            return
+        }
+    }
+    else {
+        $AccountData.Remove('OU')
     }
 
-    # Dodaj inne atrybuty, jeśli są
+    # Przygotuj podstawowe parametry
+    $newUserParams = @{
+        Path            = $ou
+        AccountPassword = (ConvertTo-SecureString $generatedPassword -AsPlainText -Force)
+        Enabled         = $true
+    }
+
+    # Lista podstawowych parametrów New-ADUser, które NIE idą do -OtherAttributes
+    $standardParams = @(
+        'Name', 'GivenName', 'Surname', 'DisplayName', 'UserPrincipalName', 'SamAccountName',
+        'Path', 'AccountPassword', 'Enabled'
+    )
+
+    # Rozdziel parametry: standardowe vs inne (np. extensionAttributes)
     foreach ($key in $AccountData.Keys) {
-        if ($key -notin $newUserParams.Keys) {
+        if ($standardParams -contains $key) {
             $newUserParams[$key] = $AccountData[$key]
+        }
+        else {
+            if (-not $newUserParams.ContainsKey('OtherAttributes')) {
+                $newUserParams['OtherAttributes'] = @{}
+            }
+            $newUserParams['OtherAttributes'][$key] = $AccountData[$key]
         }
     }
 
-    # Wyświetl parametry konta
+    # Debug — wyświetl parametry
     Write-Host "----- New-ADUser parameters -----"
     $newUserParams.GetEnumerator() | ForEach-Object {
-        Write-Host "$($_.Key): $($_.Value)"
+        if ($_.Key -eq 'OtherAttributes') {
+            Write-Host "OtherAttributes:"
+            $_.Value.GetEnumerator() | ForEach-Object {
+                Write-Host "  $($_.Key): $($_.Value)"
+            }
+        }
+        else {
+            Write-Host "$($_.Key): $($_.Value)"
+        }
     }
 
-    # Wyświetl grupy
     Write-Host "`n----- Groups to be added to -----"
     foreach ($group in $Groups) {
         Write-Host $group
     }
 
-    # $newUser = New-ADUser @newUserParams
+    try {
+        # Tworzenie konta
+        $newUser = New-ADUser @newUserParams -ErrorAction Stop
+    }
+    catch {
+        Show-ErrorBox -Message "Failed to create user account.`n`n$($_.Exception.Message)"
+        return
+    }
 
-    # foreach ($group in $groups) {
-    #     Add-ADGroupMember -Identity $group -Members $newUser.SamAccountName -WhatIf
-    # }
-    
+    foreach ($group in $Groups) {
+        try {
+            Add-ADGroupMember -Identity $group -Members $newUser.SamAccountName -ErrorAction Stop
+        }
+        catch {
+            Show-ErrorBox -Message "User created, but failed to add to group: $group.`n`n$($_.Exception.Message)"
+        }
+    }
+
     Show-PasswordBox -Password $generatedPassword
 }
+
 
 function Show-PasswordBox {
     param (
@@ -79,3 +132,13 @@ function Show-PasswordBox {
     $form.Topmost = $true
     $form.ShowDialog()
 }
+
+function Show-ErrorBox {
+    param (
+        [string]$Message
+    )
+
+    Add-Type -AssemblyName System.Windows.Forms
+    [System.Windows.Forms.MessageBox]::Show($Message, "Error", 'OK', 'Error')
+}
+
