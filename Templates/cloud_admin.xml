@@ -66,6 +66,7 @@
         <Label>User Logon Name (Pre 2000)</Label>
         <Template>MOJAFIRMA\c{InputFirstname[0]}{InputSurname}c</Template>
         <Editable>false</Editable>
+        <Visible>false</Visible>
         <ADAttribute>SamAccountName</ADAttribute>
     </Field>
     <Field>

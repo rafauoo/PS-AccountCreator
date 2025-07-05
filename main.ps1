@@ -1,3 +1,6 @@
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
 # Wczytaj moduły
 . "$PSScriptRoot\Modules\TemplateLoader.ps1"
 . "$PSScriptRoot\Modules\FormBuilder.ps1"

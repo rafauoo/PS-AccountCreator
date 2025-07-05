@@ -121,6 +121,9 @@ function Build-Form {
     $inputFont = New-Object System.Drawing.Font("Segoe UI", 9)
 
     foreach ($field in $Template.Template.Fields.Field) {
+        if ($field.Visible -and $field.Visible.ToLower() -eq "false") {
+            continue
+        }
         $label = New-Object System.Windows.Forms.Label
         $label.Text = $field.Label
         $label.Font = $labelFont
