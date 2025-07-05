@@ -5,7 +5,7 @@ function Handle-CreateAccount {
     )
 
     # Przygotuj parametry dla New-ADUser
-    $generatedPassword = [System.Web.Security.Membership]::GeneratePassword(12, 2)
+    $generatedPassword = New-HumanFriendlyPassword -Length 24
     $newUserParams = @{
         AccountPassword = $generatedPassword  # Tu możesz podstawić właściwe hasło
     }

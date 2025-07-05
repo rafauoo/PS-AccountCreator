@@ -7,6 +7,7 @@ Add-Type -AssemblyName System.Drawing
 . "$PSScriptRoot\Modules\AccountCreator.ps1"
 . "$PSScriptRoot\Modules\Menu.ps1"
 . "$PSScriptRoot\Modules\SummaryForm.ps1"
+. "$PSScriptRoot\PasswordGenerator\genPassword.ps1"
 
 # Uruchom GUI
 Show-GUI

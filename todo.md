@@ -1,6 +1,4 @@
 ## do zrobienia:
-
-- Pole Visible (TRUE/FALSE) w XMLu
 - Podłączenie skryptu do generowania haseł
 - Dodawanie/usuwanie grup w formularzu
 - OU jako pole formularza?
