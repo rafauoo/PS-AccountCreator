@@ -37,10 +37,23 @@ function Update-DependentFields {
 
     # Zbuduj słownik tylko z aktualnych pól lokalnych
     foreach ($field in $Template.Template.Fields.Field) {
-        #Write-Host "Pole: $($field.Name), Typ: $($field.Type), Wartość: $($field.Value)"
-        if ($field.LocalVar -eq "true") {
-            if ($global:fieldInputs.ContainsKey($field.Name)) {
-                $localVars[$field.Name] = $global:fieldInputs[$field.Name].Text
+        if ($field.LocalVar -eq "true" -and $global:fieldInputs.ContainsKey($field.Name)) {
+            $ctrl = $global:fieldInputs[$field.Name]
+            if ($ctrl -is [System.Windows.Forms.ComboBox]) {
+                $selectedLabel = $ctrl.SelectedItem
+                $map = $ctrl.Tag
+                if ($map -and $map.ContainsKey($selectedLabel)) {
+                    $localVars[$field.Name] = $map[$selectedLabel]
+                }
+                else {
+                    $localVars[$field.Name] = $selectedLabel
+                }
+            }
+            elseif ($ctrl -is [System.Windows.Forms.CheckBox]) {
+                $localVars[$field.Name] = $ctrl.Checked
+            }
+            else {
+                $localVars[$field.Name] = $ctrl.Text
             }
         }
     }
@@ -142,6 +155,35 @@ function Build-Form {
             $input.Checked = ($field.Value -eq "true")
             $input.Enabled = $isEditable
         }
+        elseif ($field.Type -eq "Select") {
+            $input = New-Object System.Windows.Forms.ComboBox
+            $input.Location = New-Object System.Drawing.Point(210, $y)
+            $input.Width = 250
+            $input.Font = $inputFont
+            $input.DropDownStyle = 'DropDownList'
+            $input.Enabled = $isEditable
+
+            $optionMap = @{}
+            foreach ($option in $field.Options.Option) {
+                $label = $option.Label
+                $value = $option.Value
+                $input.Items.Add($label) | Out-Null
+                $optionMap[$label] = $value
+            }
+
+            $input.Tag = $optionMap
+
+            # Ustawienie wartości domyślnej, jeśli istnieje
+            if ($field.Value) {
+                $selected = $optionMap.GetEnumerator() | Where-Object { $_.Value -eq $field.Value } | Select-Object -First 1
+                if ($selected) {
+                    $input.SelectedItem = $selected.Key
+                }
+            }
+            elseif ($input.Items.Count -gt 0) {
+                $input.SelectedIndex = 0
+            }
+        }
         else {
             $input = New-Object System.Windows.Forms.TextBox
             $input.Location = New-Object System.Drawing.Point(210, $y)
@@ -150,6 +192,7 @@ function Build-Form {
             $input.Text = $field.Value
             $input.ReadOnly = -not $isEditable
         }
+
 
         $input.Name = $field.Name
         $Panel.Controls.Add($input)

@@ -31,6 +31,32 @@
       <Editable>true</Editable>
       <ADAttribute>extensionAttribute16</ADAttribute>
     </Field>
+    <Field>
+      <Name>Team</Name>
+      <Label>Team</Label>
+      <Type>Select</Type>
+      <Editable>true</Editable>
+      <LocalVar>true</LocalVar>
+      <ADAttribute>extensionAttribute12</ADAttribute>
+      <Options>
+        <Option>
+          <Label>Development</Label>
+          <Value>DEV</Value>
+        </Option>
+        <Option>
+          <Label>Customer Service</Label>
+          <Value>CUST</Value>
+        </Option>
+        <Option>
+          <Label>Human Resources</Label>
+          <Value>HR</Value>
+        </Option>
+        <Option>
+          <Label>Sales</Label>
+          <Value>SALES</Value>
+        </Option>
+      </Options>
+    </Field>
 
     <!-- POLA WYLICZANE (READ-ONLY) -->
     <Field>

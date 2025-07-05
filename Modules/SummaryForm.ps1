@@ -41,9 +41,20 @@ function Show-SummaryForm {
                 if ($ctrl -is [System.Windows.Forms.CheckBox]) {
                     $value = $ctrl.Checked
                 }
+                elseif ($ctrl -is [System.Windows.Forms.ComboBox]) {
+                    $selectedLabel = $ctrl.SelectedItem
+                    $map = $ctrl.Tag
+                    if ($map -and $map.ContainsKey($selectedLabel)) {
+                        $value = $map[$selectedLabel]
+                    }
+                    else {
+                        $value = $selectedLabel
+                    }
+                }
                 else {
                     $value = $ctrl.Text
                 }
+
                 $source = "From User Input"
             }
 
