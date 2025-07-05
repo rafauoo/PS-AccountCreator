@@ -37,23 +37,21 @@
       <Type>Select</Type>
       <Editable>true</Editable>
       <LocalVar>true</LocalVar>
-      <ADAttribute>OU</ADAttribute>
       <Options>
         <Option>
-          <Label>Development</Label>
-          <Value>OU=Development,OU=Users,DC=mojafirma,DC=com</Value>
+            <Label>Development</Label>
+            <Attributes>
+                <Attribute ADAttribute="OU" Value="OU=Development,OU=Users,DC=mojafirma,DC=com" />
+                <Attribute ADAttribute="manager" Value="CN=DevManager,CN=Users,DC=mojafirma,DC=com" />
+                <Attribute ADAttribute="department" Value="Development" />
+            </Attributes>
         </Option>
         <Option>
-          <Label>Customer Service</Label>
-          <Value>OU=Customer Service,OU=Users,DC=mojafirma,DC=com</Value>
-        </Option>
-        <Option>
-          <Label>Human Resources</Label>
-          <Value>OU=HR,OU=Users,DC=mojafirma,DC=com</Value>
-        </Option>
-        <Option>
-          <Label>Sales</Label>
-          <Value>OU=Sales,OU=Users,DC=mojafirma,DC=com</Value>
+            <Label>Dupa</Label>
+            <Attributes>
+                <Attribute ADAttribute="OU" Value="OU=Dupa,OU=Users,DC=mojafirma,DC=com" />
+                <Attribute ADAttribute="manager" Value="CN=Inny,CN=Users,DC=mojafirma,DC=com" />
+            </Attributes>
         </Option>
       </Options>
     </Field>

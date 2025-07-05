@@ -194,7 +194,7 @@ Example:
 
 ## Select and Checkbox Fields
 
-### Select Field Example
+### Select Field Example (single value)
 
 ```xml
 <Field>
@@ -204,13 +204,43 @@ Example:
   <Options>
     <Option>
       <Label>Development</Label>
-      <Value>DEV</Value>
+      <Attributes>
+        <Attribute ADAttribute="department" Value="Development" />
+      </Attributes>
     </Option>
   </Options>
 </Field>
 ```
 
-Used for dropdowns. Each option has a visible label and internal value.
+### Select Field with Multiple AD Attributes
+
+You can return multiple AD attributes from a single selection by using the `<Attributes>` node:
+
+```xml
+<Field>
+  <Name>DepartmentPreset</Name>
+  <Label>Department Preset</Label>
+  <Type>Select</Type>
+  <Editable>true</Editable>
+  <Options>
+    <Option>
+      <Label>Development</Label>
+      <Attributes>
+        <Attribute ADAttribute="OU" Value="OU=Development,OU=Users,DC=mojafirma,DC=com" />
+        <Attribute ADAttribute="manager" Value="CN=DevManager,CN=Users,DC=mojafirma,DC=com" />
+        <Attribute ADAttribute="department" Value="Development" />
+      </Attributes>
+    </Option>
+    <Option>
+      <Label>Dupa</Label>
+      <Attributes>
+        <Attribute ADAttribute="OU" Value="OU=Dupa,OU=Users,DC=mojafirma,DC=com" />
+        <Attribute ADAttribute="manager" Value="CN=Inny,CN=Users,DC=mojafirma,DC=com" />
+      </Attributes>
+    </Option>
+  </Options>
+</Field>
+```
 
 ### Checkbox Example
 
@@ -224,5 +254,3 @@ Used for dropdowns. Each option has a visible label and internal value.
 ```
 
 Used for boolean values.
-
----

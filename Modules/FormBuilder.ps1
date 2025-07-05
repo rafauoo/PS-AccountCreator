@@ -43,7 +43,17 @@ function Update-DependentFields {
                 $selectedLabel = $ctrl.SelectedItem
                 $map = $ctrl.Tag
                 if ($map -and $map.ContainsKey($selectedLabel)) {
-                    $localVars[$field.Name] = $map[$selectedLabel]
+                    $selectedValue = $map[$selectedLabel]
+    
+                    if ($selectedValue -is [hashtable]) {
+                        foreach ($k in $selectedValue.Keys) {
+                            $localVars[$k] = $selectedValue[$k]
+                        }
+                        $localVars[$field.Name] = $selectedLabel
+                    }
+                    else {
+                        $localVars[$field.Name] = $selectedValue
+                    }
                 }
                 else {
                     $localVars[$field.Name] = $selectedLabel
@@ -166,10 +176,26 @@ function Build-Form {
             $optionMap = @{}
             foreach ($option in $field.Options.Option) {
                 $label = $option.Label
-                $value = $option.Value
+
+                if ($option.Attributes) {
+                    # Rzutuj atrybuty do hashtable
+                    $attrMap = @{}
+                    foreach ($attr in $option.Attributes.ChildNodes) {
+                        $adAttr = $attr.Attributes["ADAttribute"].Value
+                        $val = $attr.Attributes["Value"].Value
+                        $attrMap[$adAttr] = $val
+                    }
+
+                    $optionMap[$label] = $attrMap
+                }
+                else {
+                    # Backward compatibility (jeśli tylko <Value>)
+                    $optionMap[$label] = $option.Value
+                }
+
                 $input.Items.Add($label) | Out-Null
-                $optionMap[$label] = $value
             }
+
 
             $input.Tag = $optionMap
 
@@ -204,12 +230,23 @@ function Build-Form {
 
     foreach ($field in $Template.Template.Fields.Field) {
         if ($field.LocalVar -eq "true" -and $global:fieldInputs.ContainsKey($field.Name)) {
-            $global:fieldInputs[$field.Name].Add_TextChanged({
-                    param($sender, $e)
-                    Update-DependentFields $global:currentTemplate
-                })
+            $ctrl = $global:fieldInputs[$field.Name]
+
+            if ($ctrl -is [System.Windows.Forms.ComboBox]) {
+                $ctrl.Add_SelectedIndexChanged({
+                        param($sender, $e)
+                        Update-DependentFields $global:currentTemplate
+                    })
+            }
+            else {
+                $ctrl.Add_TextChanged({
+                        param($sender, $e)
+                        Update-DependentFields $global:currentTemplate
+                    })
+            }
         }
     }
+
 
     $submitButton = New-Object System.Windows.Forms.Button
     $submitButton.Text = "Create Account"

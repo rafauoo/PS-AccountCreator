@@ -28,36 +28,53 @@ function Show-SummaryForm {
     $toolTip = New-Object System.Windows.Forms.ToolTip
 
     foreach ($field in $Template.Template.Fields.Field) {
-        if ($field.ADAttribute) {
-            $value = ""
-            $source = "Empty"
+        $value = ""
+        $source = "Empty"
 
-            if ($field.Value) {
-                $value = $field.Value
-                $source = "From Template"
+        if ($field.Value) {
+            $value = $field.Value
+            $source = "From Template"
+        }
+        elseif ($global:fieldInputs.ContainsKey($field.Name)) {
+            $ctrl = $global:fieldInputs[$field.Name]
+
+            if ($ctrl -is [System.Windows.Forms.CheckBox]) {
+                $value = $ctrl.Checked
             }
-            elseif ($global:fieldInputs.ContainsKey($field.Name)) {
-                $ctrl = $global:fieldInputs[$field.Name]
-                if ($ctrl -is [System.Windows.Forms.CheckBox]) {
-                    $value = $ctrl.Checked
-                }
-                elseif ($ctrl -is [System.Windows.Forms.ComboBox]) {
-                    $selectedLabel = $ctrl.SelectedItem
-                    $map = $ctrl.Tag
-                    if ($map -and $map.ContainsKey($selectedLabel)) {
-                        $value = $map[$selectedLabel]
-                    }
-                    else {
-                        $value = $selectedLabel
-                    }
+            elseif ($ctrl -is [System.Windows.Forms.ComboBox]) {
+                $selectedLabel = $ctrl.SelectedItem
+                $map = $ctrl.Tag
+
+                if ($map -and $map.ContainsKey($selectedLabel)) {
+                    $value = $map[$selectedLabel]
                 }
                 else {
-                    $value = $ctrl.Text
+                    $value = $selectedLabel
                 }
-
-                $source = "From User Input"
+            }
+            else {
+                $value = $ctrl.Text
             }
 
+            $source = "From User Input"
+        }
+
+        # Jeśli wartość to mapa AD atrybutów — pokaż każdą parę
+        if ($value -is [hashtable]) {
+            foreach ($adAttr in $value.Keys) {
+                $val = $value[$adAttr]
+                $rowIndex = $grid.Rows.Add($field.Label, $adAttr, $val)
+
+                if (-not $val) {
+                    $grid.Rows[$rowIndex].DefaultCellStyle.BackColor = [System.Drawing.Color]::MistyRose
+                    $grid.Rows[$rowIndex].DefaultCellStyle.ForeColor = [System.Drawing.Color]::DarkRed
+                }
+
+                $toolTip.SetToolTip($grid, "Source: $source")
+            }
+        }
+        elseif ($field.ADAttribute) {
+            # Standardowe pola z jednym ADAttribute
             $rowIndex = $grid.Rows.Add($field.Label, $field.ADAttribute, $value)
 
             if (-not $value) {
@@ -66,14 +83,14 @@ function Show-SummaryForm {
                 $source = "Empty"
             }
 
-            # Tooltip per row
             $toolTip.SetToolTip($grid, "Source: $source")
         }
     }
 
+
     $form.Controls.Add($grid)
 
-    # GroupBox z grupami zaraz pod gridem
+    # GroupBox z grupami
     $groupBox = New-Object System.Windows.Forms.GroupBox
     $groupBox.Text = "Assigned Groups"
     $groupBox.Location = New-Object System.Drawing.Point(10, 330)
@@ -97,7 +114,7 @@ function Show-SummaryForm {
     $groupBox.Controls.Add($groupBoxText)
     $form.Controls.Add($groupBox)
 
-    # Panel na przyciski pod grupami
+    # Panel z przyciskami
     $buttonPanel = New-Object System.Windows.Forms.FlowLayoutPanel
     $buttonPanel.Location = New-Object System.Drawing.Point(0, 480)
     $buttonPanel.Size = New-Object System.Drawing.Size(650, 40)
@@ -108,9 +125,7 @@ function Show-SummaryForm {
     $confirmButton.Text = "Create"
     $confirmButton.Width = 100
 
-
     $confirmButton.Add_Click({
-            # Pobierz wartości z gridu do hashtable
             $accountData = @{}
             foreach ($row in $grid.Rows) {
                 $adAttr = $row.Cells[1].Value
@@ -119,10 +134,12 @@ function Show-SummaryForm {
                     $accountData[$adAttr] = $val
                 }
             }
+
             $groups = @()
             foreach ($group in $Template.Template.Groups.Group) {
                 $groups += $group
             }
+
             $form.Close()
             Handle-CreateAccount -AccountData $accountData -Groups $groups
             Reset-FormFields
