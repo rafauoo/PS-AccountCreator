@@ -35,7 +35,7 @@ function Handle-CreateAccount {
     $standardParams = @(
         'Name', 'GivenName', 'Surname', 'DisplayName', 'UserPrincipalName', 'SamAccountName',
         'Path', 'AccountPassword', 'Enabled', 'PasswordNeverExpires', 'ChangePasswordAtLogon', 'CannotChangePassword'
-        'Description'
+        'Description', 'EmailAddress'
     )
 
     # Rozdziel parametry: standardowe vs inne (np. extensionAttributes)
