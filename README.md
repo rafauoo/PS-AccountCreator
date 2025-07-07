@@ -151,15 +151,20 @@ You can define it as a static or selectable field:
 
 #### Common Standard Parameters:
 
-| Field               | AD Attribute         | Notes                                             |
-| ------------------- | -------------------- | ------------------------------------------------- |
-| `Name`              | `name`               | Full name of the user                             |
-| `GivenName`         | `givenName`          | First name                                        |
-| `DisplayName`       | `displayName`        | Display name for address book                     |
-| `SamAccountName`    | `SamAccountName`     | Legacy (Pre-Windows 2000) logon                   |
-| `UserPrincipalName` | `userPrincipalName`  | Modern logon name (UPN)                           |
-| `OU`                | _Used as -Path_      | DistinguishedName of OU (not passed as attribute) |
-| `AccountPassword`   | _Handled internally_ | Set from password generator                       |
+| Field                   | AD Attribute            | Notes                                                |
+| ----------------------- | ----------------------- | ---------------------------------------------------- |
+| `Name`                  | `name`                  | Full name of the user                                |
+| `GivenName`             | `givenName`             | First name                                           |
+| `Surname`               | `surname`               | Last name                                            |
+| `DisplayName`           | `displayName`           | Display name for address book                        |
+| `SamAccountName`        | `SamAccountName`        | Legacy (Pre-Windows 2000) logon                      |
+| `UserPrincipalName`     | `userPrincipalName`     | Modern logon name (UPN)                              |
+| `OU`                    | _Used as -Path_         | DistinguishedName of OU (not passed as attribute)    |
+| `AccountPassword`       | _Handled internally_    | Set from password generator                          |
+| `CannotChangePassword`  | `cannotChangePassword`  | boolean value if user can change their password      |
+| `ChangePasswordAtLogon` | `changePasswordAtLogon` | boolean value if user must change password at log on |
+| `PasswordNeverExpires`  | `passwordNeverExpires`  | boolean value if password never expires              |
+| `Description`           | `description`           | description of the account                           |
 
 #### OtherAttributes
 

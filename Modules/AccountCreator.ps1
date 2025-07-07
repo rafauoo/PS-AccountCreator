@@ -34,7 +34,8 @@ function Handle-CreateAccount {
     # Lista podstawowych parametrów New-ADUser, które NIE idą do -OtherAttributes
     $standardParams = @(
         'Name', 'GivenName', 'Surname', 'DisplayName', 'UserPrincipalName', 'SamAccountName',
-        'Path', 'AccountPassword', 'Enabled'
+        'Path', 'AccountPassword', 'Enabled', 'PasswordNeverExpires', 'ChangePasswordAtLogon', 'CannotChangePassword'
+        'Description'
     )
 
     # Rozdziel parametry: standardowe vs inne (np. extensionAttributes)

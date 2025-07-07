@@ -87,7 +87,7 @@ function Show-SummaryForm {
         }
     }
 
-
+    $rowIndex = $grid.Rows.Add("BaseOU", "BaseOU", $Template.Template.BaseOU)
     $form.Controls.Add($grid)
 
     # GroupBox z grupami
@@ -139,7 +139,11 @@ function Show-SummaryForm {
             foreach ($group in $Template.Template.Groups.Group) {
                 $groups += $group
             }
-
+            # write account data:
+            Write-Host "Account Data:"
+            foreach ($key in $accountData.Keys) {
+                Write-Host "$($key): $($accountData[$key])"
+            }
             $form.Close()
             Handle-CreateAccount -AccountData $accountData -Groups $groups
             Reset-FormFields
