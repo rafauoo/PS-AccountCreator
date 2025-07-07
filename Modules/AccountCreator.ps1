@@ -72,7 +72,8 @@ function Handle-CreateAccount {
 
     try {
         # Tworzenie konta
-        $newUser = New-ADUser @newUserParams -ErrorAction Stop
+        New-ADUser @newUserParams -ErrorAction Stop
+        $newUser = Get-ADUser -Identity $newUserParams['SamAccountName']
     }
     catch {
         Show-ErrorBox -Message "Failed to create user account.`n`n$($_.Exception.Message)"

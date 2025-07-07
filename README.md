@@ -161,10 +161,11 @@ You can define it as a static or selectable field:
 | `UserPrincipalName`     | `userPrincipalName`     | Modern logon name (UPN)                              |
 | `OU`                    | _Used as -Path_         | DistinguishedName of OU (not passed as attribute)    |
 | `AccountPassword`       | _Handled internally_    | Set from password generator                          |
-| `CannotChangePassword`  | `cannotChangePassword`  | boolean value if user can change their password      |
-| `ChangePasswordAtLogon` | `changePasswordAtLogon` | boolean value if user must change password at log on |
-| `PasswordNeverExpires`  | `passwordNeverExpires`  | boolean value if password never expires              |
-| `Description`           | `description`           | description of the account                           |
+| `CannotChangePassword`  | `cannotChangePassword`  | Boolean value if user can change their password      |
+| `ChangePasswordAtLogon` | `changePasswordAtLogon` | Boolean value if user must change password at log on |
+| `PasswordNeverExpires`  | `passwordNeverExpires`  | Boolean value if password never expires              |
+| `Description`           | `description`           | Description of the account                           |
+| `EmailAddress`          | `emailAddress`          | Mail address                                         |
 
 #### OtherAttributes
 
