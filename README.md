@@ -239,10 +239,10 @@ You can return multiple AD attributes from a single selection by using the `<Att
       </Attributes>
     </Option>
     <Option>
-      <Label>Dupa</Label>
+      <Label>Sales</Label>
       <Attributes>
-        <Attribute ADAttribute="OU" Value="OU=Dupa,OU=Users,DC=mojafirma,DC=com" />
-        <Attribute ADAttribute="manager" Value="CN=Inny,CN=Users,DC=mojafirma,DC=com" />
+        <Attribute ADAttribute="OU" Value="OU=Sales,OU=Users,DC=mojafirma,DC=com" />
+        <Attribute ADAttribute="manager" Value="CN=SalesManager,CN=Users,DC=mojafirma,DC=com" />
       </Attributes>
     </Option>
   </Options>
