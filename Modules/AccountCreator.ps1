@@ -23,6 +23,9 @@ function Handle-CreateAccount {
     else {
         $AccountData.Remove('OU')
     }
+    if ($AccountData.ContainsKey('BaseOU')) {
+        $AccountData.Remove('BaseOU')
+    }
 
     # Przygotuj podstawowe parametry
     $newUserParams = @{
