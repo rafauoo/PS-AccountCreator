@@ -124,7 +124,8 @@ function Show-SummaryForm {
     $confirmButton = New-Object System.Windows.Forms.Button
     $confirmButton.Text = "Create"
     $confirmButton.Width = 100
-
+    $confirmButton.BackColor = [System.Drawing.Color]::LightGreen
+    $confirmButton.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
     $confirmButton.Add_Click({
             $accountData = @{}
             foreach ($row in $grid.Rows) {
@@ -153,6 +154,7 @@ function Show-SummaryForm {
     $cancelButton.Text = "Cancel"
     $cancelButton.Width = 100
     $cancelButton.Add_Click({ $form.Close() })
+    $cancelButton.BackColor = [System.Drawing.Color]::LightSalmon
 
     $buttonPanel.Controls.Add($confirmButton)
     $buttonPanel.Controls.Add($cancelButton)

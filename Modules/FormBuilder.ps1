@@ -72,19 +72,20 @@ function Update-DependentFields {
     foreach ($field in $Template.Template.Fields.Field) {
         if ($field.Template -and ($field.Editable -ne $null -and $field.Editable.ToLower() -ne "true")) {
             $evaluated = Evaluate-TemplateString -template $field.Template -localVars $localVars
-            #Write-Host "Aktualizacja pola: $($field.Name), Wartość: $evaluated"
+            Write-Host "Aktualizacja pola: $($field.Name), Wartość: $evaluated"
 
-            if ($field.Value) {
-                $field.Value = $evaluated
+            $valueNode = $field.SelectSingleNode("Value")
+            if ($valueNode -ne $null) {
+                $valueNode.InnerText = [string]$evaluated
             }
             else {
                 $newValueNode = $Template.CreateElement("Value")
-                $newValueNode.InnerText = $evaluated
+                $newValueNode.InnerText = [string]$evaluated
                 $field.AppendChild($newValueNode) | Out-Null
             }
 
             if ($global:fieldInputs.ContainsKey($field.Name)) {
-                $global:fieldInputs[$field.Name].Text = $evaluated
+                $global:fieldInputs[$field.Name].Text = [string]$evaluated
             }
 
             #Write-Host "Pole: $($field.Name), Nowa wartość: $evaluated"

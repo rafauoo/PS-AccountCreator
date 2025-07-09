@@ -166,6 +166,7 @@ You can define it as a static or selectable field:
 | `PasswordNeverExpires`  | `passwordNeverExpires`  | Boolean value if password never expires              |
 | `Description`           | `description`           | Description of the account                           |
 | `EmailAddress`          | `emailAddress`          | Mail address                                         |
+| `EmployeeID`            | `employeeID`            | ID of the employee                                   |
 
 #### OtherAttributes
 
